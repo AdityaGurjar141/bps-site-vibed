@@ -162,17 +162,17 @@
     </style>
 </head>
 
-<body class="antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
+<body id="top" class="antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
 
     <nav class="fixed w-full z-50 glass-panel transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-3">
+                <a href="#top" class="flex items-center gap-3">
                     <img src="images/Aerovision.png" alt="AeroVision Logo"
                         class="h-12 w-12 object-contain rounded-md shadow-lg">
                     <span class="font-bold text-2xl tracking-wide text-white">AeroVision<span
                             class="text-brand-accent">.</span></span>
-                </div>
+                </a>
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#overview"
                         class="text-sm font-medium text-gray-300 hover:text-brand-accent transition-colors">Overview</a>
@@ -214,56 +214,75 @@
         </div>
     </nav>
 
+    <!-- Global Amoeba Geometric Background -->
+    <div class="fixed inset-0 z-[-2] bg-[#0B0F19] overflow-hidden pointer-events-none">
+        <div id="geo-curves"
+            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 ease-linear w-0 h-0 flex items-center justify-center">
+            <div class="amoeba border-2 border-brand-accent/80 w-[30vw] h-[30vw] absolute mix-blend-screen opacity-50"
+                style="animation-delay: 0s;"></div>
+            <div class="amoeba border border-brand-accent/60 w-[50vw] h-[50vw] absolute mix-blend-screen opacity-40"
+                style="animation-delay: -3s;"></div>
+            <div class="amoeba border border-brand-accent/40 w-[70vw] h-[70vw] absolute mix-blend-screen opacity-30"
+                style="animation-delay: -6s;"></div>
+            <div class="amoeba border border-brand-accent/20 w-[90vw] h-[90vw] absolute mix-blend-screen opacity-20"
+                style="animation-delay: -9s;"></div>
+            <div class="amoeba border border-brand-accent/10 w-[110vw] h-[110vw] absolute mix-blend-screen opacity-10"
+                style="animation-delay: -12s;"></div>
+        </div>
+    </div>
+
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-brand-dark opacity-90 z-10"></div>
-            <!-- Abstract background pattern -->
-            <div class="absolute inset-0"
-                style="background-image: radial-gradient(#1E293B 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3;">
+        <!-- Full Page Looping Carousel Background -->
+        <div class="absolute inset-0 z-0 overflow-hidden bg-brand-dark">
+            <div id="hero-carousel">
+                <div class="hero-bg absolute inset-0 bg-cover bg-center opacity-100 transition-opacity duration-1000"
+                    style="background-image: url('images/action_drone_1.png')">
+                </div>
+                <div class="hero-bg absolute inset-0 bg-cover opacity-0 transition-opacity duration-1000"
+                    style="background-image: url('images/action_drone_2.png'); background-position: center 20%;">
+                </div>
+                <div class="hero-bg absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000"
+                    style="background-image: url('images/action_drone_3.png')">
+                </div>
             </div>
-            <div
-                class="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-accent rounded-full filter blur-[120px] opacity-20">
-            </div>
+            <div class="absolute inset-0 bg-[#0B0F19]/70 mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-brand-dark/50 to-transparent"></div>
         </div>
 
-        <div
-            class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center lg:text-left flex flex-col lg:flex-row items-center gap-12">
-            <div class="lg:w-1/2">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-start">
+            <div class="w-full lg:w-1/2 lg:pr-12 xl:pr-20 text-left flex flex-col items-start">
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gray border border-gray-700 mb-6 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gray/80 border border-gray-700/50 mb-6 shadow-[0_0_10px_rgba(245,158,11,0.2)] backdrop-blur-sm">
                     <span
                         class="flex h-2 w-2 rounded-full bg-brand-accent animate-pulse shadow-[0_0_8px_rgba(245,158,11,1)]"></span>
                     <span class="text-xs font-semibold uppercase tracking-wider text-gray-300">Enterprise Inspection
                         Drone</span>
                 </div>
-                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 text-white leading-tight">
+                <h1
+                    class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 text-white leading-tight drop-shadow-lg">
                     Precision <br />
                     <span class="gradient-text">Aerial Inspection</span>
                 </h1>
-                <p class="text-lg text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0">
+                <p class="text-lg text-gray-300 mb-10 max-w-xl drop-shadow-md font-medium">
                     AeroVision X1 replaces slow, expensive, and unsafe manual surveying with an end-to-end ecosystem
                     combining heavy-duty hardware, advanced analytics, and cloud software.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div class="flex flex-col sm:flex-row gap-4 justify-start w-full max-w-lg">
                     <a href="#pricing"
-                        class="shine-btn px-8 py-4 rounded-lg bg-brand-accent text-brand-dark font-bold text-lg hover:bg-brand-accentHover transition-all hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.4)] text-center">
+                        class="shine-btn px-8 py-4 rounded-lg bg-brand-accent text-brand-dark font-bold text-lg hover:bg-brand-accentHover transition-all hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.4)] text-center w-full sm:w-auto">
                         View Packages
                     </a>
                     <a href="#overview"
-                        class="px-8 py-4 rounded-lg bg-brand-gray text-white font-semibold text-lg border border-gray-600 hover:border-gray-400 transition-all text-center hover:bg-gray-800">
+                        class="px-8 py-4 rounded-lg bg-brand-gray/80 text-white font-semibold text-lg border border-gray-600 hover:border-gray-400 transition-all text-center hover:bg-gray-800 backdrop-blur-sm w-full sm:w-auto">
                         Explore Features
                     </a>
                 </div>
-            </div>
-            <div class="lg:w-1/2 flex justify-center float-anim">
-                <img src="images/Aerovision.png" alt="AeroVision X1 Conceptual Logo"
-                    class="max-w-full h-auto w-[500px] rounded-2xl shadow-[0_0_40px_rgba(245,158,11,0.2)] border border-gray-800 object-cover transform lg:rotate-3 hover:rotate-0 transition-transform duration-700">
             </div>
         </div>
     </section>
 
     <!-- Vision and Mission Section -->
-    <section class="py-16 relative bg-[#0B0F19] z-20">
+    <section class="py-16 relative bg-transparent z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-8">
                 <div
@@ -327,47 +346,71 @@
         </div>
     </section>
 
-    <section id="overview" class="py-20 bg-brand-gray border-y border-gray-800 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Built for Heavy Industry</h2>
-                <p class="text-gray-400">The AeroVision X1 is purpose-built for construction, mining, and critical
-                    infrastructure, offering a complete solution from data capture to decision-making.</p>
+    <!-- Built for Heavy Industry -->
+    <section id="overview" class="py-20 bg-brand-dark border-y border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-4 drop-shadow-md">Built for <span
+                    class="text-brand-accent">Heavy Industry</span></h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">The AeroVision X1 offers a complete solution from data capture to
+                decision-making.</p>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-12">
+            <!-- Construction -->
+            <div
+                class="zoom-scroll-card relative rounded-3xl overflow-hidden h-[400px] flex items-center group transition-all duration-1000 scale-95 opacity-50">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-110"
+                    style="background-image: url('images/construction.png');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-dark/90 via-brand-dark/60 to-transparent">
+                </div>
+                <div class="relative z-10 p-8 md:p-12 lg:w-1/2">
+                    <div
+                        class="h-14 w-14 bg-brand-gray/80 backdrop-blur-md rounded-xl flex items-center justify-center mb-6 border border-brand-accent/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                        <i class="fas fa-hard-hat text-3xl text-brand-accent"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-4">Construction & EPC</h3>
+                    <p class="text-gray-300 text-lg leading-relaxed">Topographic surveying, 3D mapping, and automated
+                        progress monitoring across project lifecycles. Ensure on-time delivery with precise, actionable
+                        digital twins.</p>
+                </div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- App 1 -->
-                <div class="feature-card bg-brand-dark p-8 rounded-xl border border-gray-800 group">
-                    <div
-                        class="h-14 w-14 bg-brand-gray rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-accent transition-colors duration-300">
-                        <i
-                            class="fas fa-hard-hat text-2xl text-brand-accent group-hover:text-brand-dark transition-colors duration-300"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Construction & EPC</h3>
-                    <p class="text-gray-400 text-sm">Topographic surveying, 3D mapping, and automated progress
-                        monitoring across project lifecycles.</p>
+            <!-- Mining -->
+            <div
+                class="zoom-scroll-card relative rounded-3xl overflow-hidden h-[400px] flex items-center group transition-all duration-1000 scale-95 opacity-50">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-110"
+                    style="background-image: url('images/mining.png');"></div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-l from-brand-dark/90 via-brand-dark/60 to-transparent right-0 left-auto w-full">
                 </div>
-                <!-- App 2 -->
-                <div class="feature-card bg-brand-dark p-8 rounded-xl border border-gray-800 group">
+                <div class="relative z-10 p-8 md:p-12 lg:w-1/2 ml-auto text-right flex flex-col items-end">
                     <div
-                        class="h-14 w-14 bg-brand-gray rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-accent transition-colors duration-300">
-                        <i
-                            class="fas fa-mountain text-2xl text-brand-accent group-hover:text-brand-dark transition-colors duration-300"></i>
+                        class="h-14 w-14 bg-brand-gray/80 backdrop-blur-md rounded-xl flex items-center justify-center mb-6 border border-brand-accent/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                        <i class="fas fa-mountain text-3xl text-brand-accent"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Mining Operations</h3>
-                    <p class="text-gray-400 text-sm">Accurate stockpile measurement, environmental monitoring, and daily
-                        site digital twins.</p>
+                    <h3 class="text-3xl font-bold text-white mb-4">Mining Operations</h3>
+                    <p class="text-gray-300 text-lg leading-relaxed">Accurate stockpile measurement, environmental
+                        monitoring, and daily site digital twins. Keep personnel safe while maximizing operational
+                        efficiency.</p>
                 </div>
-                <!-- App 3 -->
-                <div class="feature-card bg-brand-dark p-8 rounded-xl border border-gray-800 group">
+            </div>
+
+            <!-- Infrastructure -->
+            <div
+                class="zoom-scroll-card relative rounded-3xl overflow-hidden h-[400px] flex items-center group transition-all duration-1000 scale-95 opacity-50">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] group-hover:scale-110"
+                    style="background-image: url('images/action_drone_3.png');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-dark/90 via-brand-dark/60 to-transparent">
+                </div>
+                <div class="relative z-10 p-8 md:p-12 lg:w-1/2">
                     <div
-                        class="h-14 w-14 bg-brand-gray rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-accent transition-colors duration-300">
-                        <i
-                            class="fas fa-bridge text-2xl text-brand-accent group-hover:text-brand-dark transition-colors duration-300"></i>
+                        class="h-14 w-14 bg-brand-gray/80 backdrop-blur-md rounded-xl flex items-center justify-center mb-6 border border-brand-accent/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                        <i class="fas fa-bridge text-3xl text-brand-accent"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Infrastructure Inspection</h3>
-                    <p class="text-gray-400 text-sm">Automated crack and defect identification on bridges, powerlines,
-                        and telecom towers.</p>
+                    <h3 class="text-3xl font-bold text-white mb-4">Infrastructure Inspection</h3>
+                    <p class="text-gray-300 text-lg leading-relaxed">Automated crack and defect identification on
+                        bridges, powerlines, and telecom towers. Leverage AI to detect micro-faults before they become
+                        critical.</p>
                 </div>
             </div>
         </div>
@@ -416,15 +459,21 @@
                 <div class="lg:w-1/2 w-full">
                     <div class="glass-panel p-1 rounded-2xl relative">
                         <!-- Abstract drone representation using grid and shapes -->
-                        <div
-                            class="bg-brand-gray rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
-                            <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                        <div class="bg-brand-gray rounded-xl overflow-hidden aspect-video flex items-center justify-center relative bg-cover bg-center"
+                            style="background-image: url('images/carbon_fiber.png');">
+                            <div class="absolute inset-0 bg-brand-dark/70 mix-blend-multiply"></div>
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent">
+                            </div>
+                            <div class="absolute inset-0 flex items-center justify-center opacity-20">
                                 <i class="fas fa-drone text-[200px] text-white"></i>
                             </div>
-                            <div class="z-10 text-center">
-                                <h3 class="text-2xl font-bold text-white mb-2">AeroVision <span
+                            <div class="z-10 text-center drop-shadow-lg">
+                                <h3 class="text-3xl font-bold text-white mb-2">AeroVision <span
                                         class="text-brand-accent">X1</span></h3>
-                                <p class="text-sm text-brand-accent font-mono">HYBRID CARBON-FIBER COMPOSITE</p>
+                                <p
+                                    class="text-sm text-brand-accent font-mono font-bold tracking-widest bg-brand-dark/50 px-3 py-1 rounded-full backdrop-blur-sm border border-brand-accent/20 mt-3 inline-block">
+                                    HYBRID CARBON-FIBER COMPOSITE</p>
                             </div>
                             <!-- Corner brackets for tech feel -->
                             <div class="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-brand-accent"></div>
@@ -440,8 +489,10 @@
         </div>
     </section>
 
-    <section id="ai-platform" class="py-20 bg-[#121826] border-y border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="ai-platform" class="py-20 border-y border-gray-800 relative bg-fixed bg-center bg-cover"
+        style="background-image: url('images/drone_bg_2.png');">
+        <div class="absolute inset-0 bg-[#0B0F19]/90 z-0"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-2 block">AeroVision
                     Insight™</span>
@@ -503,8 +554,10 @@
         </div>
     </section>
 
-    <section id="package" class="py-20 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="package" class="py-20 relative bg-fixed bg-center bg-cover"
+        style="background-image: url('images/drone_bg_3.png');">
+        <div class="absolute inset-0 bg-[#121826]/90 z-0"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Professional Infrastructure Inspection Suite
             </h2>
 
@@ -960,6 +1013,43 @@
                 submitBtn.disabled = false;
             }, 1000);
         });
+
+        // Geometric Curves Parallax Logic
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const geoCurves = document.getElementById('geo-curves');
+            if (geoCurves) {
+                geoCurves.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.15}px)) rotate(${scrollY * 0.02}deg)`;
+            }
+        });
+
+        // Natural Pace Hero Carousel
+        const heroBgs = document.querySelectorAll('.hero-bg');
+        if (heroBgs.length > 0) {
+            let heroIdx = 0;
+            setInterval(() => {
+                heroBgs[heroIdx].classList.remove('opacity-100');
+                heroBgs[heroIdx].classList.add('opacity-0');
+
+                heroIdx = (heroIdx + 1) % heroBgs.length;
+
+                heroBgs[heroIdx].classList.remove('opacity-0');
+                heroBgs[heroIdx].classList.add('opacity-100');
+            }, 4000);
+        }
+
+        // Zoom-in Scroll Logic for Industry Cards
+        const zoomCards = document.querySelectorAll('.zoom-scroll-card');
+        const zoomObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('scale-95', 'opacity-50');
+                    entry.target.classList.add('scale-100', 'opacity-100');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        zoomCards.forEach(card => zoomObserver.observe(card));
     </script>
 </body>
 
