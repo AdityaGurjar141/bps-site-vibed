@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroVision X1 | Enterprise Inspection Drone</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',
+                            gray: '#1E293B',
+                            light: '#E2E8F0',
+                            accent: '#F59E0B', // Matching the gold/orange from the logo
+                            accentHover: '#D97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0F19;
+            color: #E2E8F0;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #F59E0B, #FCD34D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F59E0B;
+        }
+
+        /* Floating Animation for Hero Image */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Shimmer Effect for Buttons */
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+
+            20% {
+                left: 100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .shine-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shine-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: skewX(-20deg);
+            animation: shine 4s infinite;
+        }
+
+        /* Scroll Reveal Utility Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Enhanced Card Hover Effect */
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.3);
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+
+        /* Dynamic Calculator Checkbox Styles */
+        .addon-card {
+            transition: all 0.3s ease;
+        }
+
+        .addon-card.active {
+            border-color: #F59E0B;
+            background-color: rgba(245, 158, 11, 0.08);
+            transform: scale(1.02);
+        }
+
+        .addon-card.active .checkbox-ui {
+            background-color: #F59E0B;
+            border-color: #F59E0B;
+            color: #0B0F19 !important;
+        }
+    </style>
+</head>
+
+<body class="antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
+
+    <nav class="fixed w-full z-50 glass-panel transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3">
+                    <img src="images/Aerovision.png" alt="AeroVision Logo"
+                        class="h-12 w-12 object-contain rounded-md shadow-lg">
+                    <span class="font-bold text-2xl tracking-wide text-white">AeroVision<span
+                            class="text-brand-accent">.</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#overview"
+                        class="text-sm font-medium text-gray-300 hover:text-brand-accent transition-colors">Overview</a>
+                    <a href="#specs"
+                        class="text-sm font-medium text-gray-300 hover:text-brand-accent transition-colors">Specs</a>
+                    <a href="#ai-platform"
+                        class="text-sm font-medium text-gray-300 hover:text-brand-accent transition-colors">Software
+                        Platform</a>
+                    <a href="#package"
+                        class="text-sm font-medium text-gray-300 hover:text-brand-accent transition-colors">Package</a>
+                    <button
+                        class="quote-btn px-5 py-2.5 rounded-full bg-brand-accent text-brand-dark font-semibold hover:bg-brand-accentHover transition-colors shadow-[0_0_15px_rgba(245,158,11,0.4)]">Request
+                        Quote</button>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-gray-700">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview"
+                    class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-brand-accent">Overview</a>
+                <a href="#specs"
+                    class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-brand-accent">Specs</a>
+                <a href="#ai-platform"
+                    class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-brand-accent">Software
+                    Platform</a>
+                <a href="#package"
+                    class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-brand-accent">Package</a>
+                <button
+                    class="quote-btn w-full text-left block px-3 py-2 text-base font-medium text-brand-accent">Request
+                    Quote</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-brand-dark opacity-90 z-10"></div>
+            <!-- Abstract background pattern -->
+            <div class="absolute inset-0"
+                style="background-image: radial-gradient(#1E293B 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3;">
+            </div>
+            <div
+                class="absolute top-1/4 right-1/4 w-96 h-96 bg-brand-accent rounded-full filter blur-[120px] opacity-20">
+            </div>
+        </div>
+
+        <div
+            class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center lg:text-left flex flex-col lg:flex-row items-center gap-12">
+            <div class="lg:w-1/2">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gray border border-gray-700 mb-6 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    <span
+                        class="flex h-2 w-2 rounded-full bg-brand-accent animate-pulse shadow-[0_0_8px_rgba(245,158,11,1)]"></span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-300">Enterprise Inspection
+                        Drone</span>
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 text-white leading-tight">
+                    Precision <br />
+                    <span class="gradient-text">Aerial Inspection</span>
+                </h1>
+                <p class="text-lg text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0">
+                    AeroVision X1 replaces slow, expensive, and unsafe manual surveying with an end-to-end ecosystem
+                    combining heavy-duty hardware, advanced analytics, and cloud software.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#pricing"
+                        class="shine-btn px-8 py-4 rounded-lg bg-brand-accent text-brand-dark font-bold text-lg hover:bg-brand-accentHover transition-all hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.4)] text-center">
+                        View Packages
+                    </a>
+                    <a href="#overview"
+                        class="px-8 py-4 rounded-lg bg-brand-gray text-white font-semibold text-lg border border-gray-600 hover:border-gray-400 transition-all text-center hover:bg-gray-800">
+                        Explore Features
+                    </a>
+                </div>
+            </div>
+            <div class="lg:w-1/2 flex justify-center float-anim">
+                <img src="images/Aerovision.png" alt="AeroVision X1 Conceptual Logo"
+                    class="max-w-full h-auto w-[500px] rounded-2xl shadow-[0_0_40px_rgba(245,158,11,0.2)] border border-gray-800 object-cover transform lg:rotate-3 hover:rotate-0 transition-transform duration-700">
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision and Mission Section -->
+    <section class="py-16 relative bg-[#0B0F19] z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div
+                    class="glass-panel p-10 rounded-3xl border border-gray-800 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-brand-accent/10 rounded-xl flex items-center justify-center mb-6 border border-brand-accent/20 relative z-10">
+                        <i class="fas fa-eye text-brand-accent text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 relative z-10">Our Vision</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm md:text-base relative z-10">To redefine the
+                        boundaries of industrial inspection through cutting-edge robotics and secure cloud
+                        infrastructure, ensuring every critical asset globally is monitored with uncompromising
+                        precision and safety.</p>
+                </div>
+                <div
+                    class="glass-panel p-10 rounded-3xl border border-gray-800 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-brand-accent/10 rounded-xl flex items-center justify-center mb-6 border border-brand-accent/20 relative z-10">
+                        <i class="fas fa-rocket text-brand-accent text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 relative z-10">Our Mission</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm md:text-base relative z-10">To build reliable,
+                        heavy-duty aerial platforms integrated with powerful data analytics that empower enterprises to
+                        save time, reduce costs, and remove human workers from hazardous environments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Statistics Row -->
+    <section class="py-12 bg-brand-dark border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center" id="counter-section">
+                <div class="reveal">
+                    <div class="text-4xl lg:text-5xl font-extrabold text-brand-accent mb-2"><span class="counter"
+                            data-target="60">0</span>+</div>
+                    <div class="text-sm text-gray-400 font-medium uppercase tracking-wider">Min Flight Time</div>
+                </div>
+                <div class="reveal">
+                    <div class="text-4xl lg:text-5xl font-extrabold text-brand-accent mb-2"><span class="counter"
+                            data-target="70">0</span>%</div>
+                    <div class="text-sm text-gray-400 font-medium uppercase tracking-wider">Time Saved</div>
+                </div>
+                <div class="reveal">
+                    <div class="text-4xl lg:text-5xl font-extrabold text-brand-accent mb-2"><span class="counter"
+                            data-target="50">0</span>%</div>
+                    <div class="text-sm text-gray-400 font-medium uppercase tracking-wider">Cost Reduction</div>
+                </div>
+                <div class="reveal">
+                    <div class="text-4xl lg:text-5xl font-extrabold text-brand-accent mb-2"><span class="counter"
+                            data-target="48">0</span></div>
+                    <div class="text-sm text-gray-400 font-medium uppercase tracking-wider">MP RGB Camera</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="overview" class="py-20 bg-brand-gray border-y border-gray-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Built for Heavy Industry</h2>
+                <p class="text-gray-400">The AeroVision X1 is purpose-built for construction, mining, and critical
+                    infrastructure, offering a complete solution from data capture to decision-making.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- App 1 -->
+                <div class="feature-card bg-brand-dark p-8 rounded-xl border border-gray-800 group">
+                    <div
+                        class="h-14 w-14 bg-brand-gray rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-accent transition-colors duration-300">
+                        <i
+                            class="fas fa-hard-hat text-2xl text-brand-accent group-hover:text-brand-dark transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Construction & EPC</h3>
+                    <p class="text-gray-400 text-sm">Topographic surveying, 3D mapping, and automated progress
+                        monitoring across project lifecycles.</p>
+                </div>
+                <!-- App 2 -->
+                <div class="feature-card bg-brand-dark p-8 rounded-xl border border-gray-800 group">
+                    <div
+                        class="h-14 w-14 bg-brand-gray rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-accent transition-colors duration-300">
+                        <i
+                            class="fas fa-mountain text-2xl text-brand-accent group-hover:text-brand-dark transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Mining Operations</h3>
+                    <p class="text-gray-400 text-sm">Accurate stockpile measurement, environmental monitoring, and daily
+                        site digital twins.</p>
+                </div>
+                <!-- App 3 -->
+                <div class="feature-card bg-brand-dark p-8 rounded-xl border border-gray-800 group">
+                    <div
+                        class="h-14 w-14 bg-brand-gray rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand-accent transition-colors duration-300">
+                        <i
+                            class="fas fa-bridge text-2xl text-brand-accent group-hover:text-brand-dark transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Infrastructure Inspection</h3>
+                    <p class="text-gray-400 text-sm">Automated crack and defect identification on bridges, powerlines,
+                        and telecom towers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="specs" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-16 items-center">
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Industrial Grade Hardware</h2>
+                    <p class="text-gray-400 mb-8">Featuring a hybrid carbon-fiber modular frame and industrial brushless
+                        motors, the X1 is designed to operate reliably in the most demanding outdoor environments.</p>
+
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="flex gap-4">
+                            <i class="fas fa-stopwatch text-brand-accent mt-1 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-white">60 Min Flight Time</h4>
+                                <p class="text-sm text-gray-400">Extended missions with smart ESCS.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-satellite text-brand-accent mt-1 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-white">RTK GNSS + GPS</h4>
+                                <p class="text-sm text-gray-400">Centimeter-level navigation precision.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-layer-group text-brand-accent mt-1 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-white">Modular Payloads</h4>
+                                <p class="text-sm text-gray-400">Quick-swap RGB, LiDAR & Thermal.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fas fa-shield-halved text-brand-accent mt-1 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-white">Secure Comms</h4>
+                                <p class="text-sm text-gray-400">Encrypted telemetry & HD video link.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 w-full">
+                    <div class="glass-panel p-1 rounded-2xl relative">
+                        <!-- Abstract drone representation using grid and shapes -->
+                        <div
+                            class="bg-brand-gray rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                                <i class="fas fa-drone text-[200px] text-white"></i>
+                            </div>
+                            <div class="z-10 text-center">
+                                <h3 class="text-2xl font-bold text-white mb-2">AeroVision <span
+                                        class="text-brand-accent">X1</span></h3>
+                                <p class="text-sm text-brand-accent font-mono">HYBRID CARBON-FIBER COMPOSITE</p>
+                            </div>
+                            <!-- Corner brackets for tech feel -->
+                            <div class="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-brand-accent"></div>
+                            <div class="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-brand-accent"></div>
+                            <div class="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-brand-accent">
+                            </div>
+                            <div class="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-brand-accent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai-platform" class="py-20 bg-[#121826] border-y border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-2 block">AeroVision
+                    Insight™</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Advanced Data Ecosystem</h2>
+                <p class="text-gray-400">The X1 is more than a drone; it's a flying edge-computing platform. Our cloud
+                    ecosystem processes raw data into secure, actionable insights within minutes.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- AI Feature -->
+                <div
+                    class="feature-card p-6 bg-brand-dark rounded-xl border border-gray-800 relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    </div>
+                    <i
+                        class="fas fa-route text-3xl text-brand-accent mb-4 transform group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="font-bold text-lg mb-2 relative z-10">Autonomous Planning</h4>
+                    <p class="text-sm text-gray-400 relative z-10">Smart waypoint missions dynamically adjust to terrain
+                        and obstacles.</p>
+                </div>
+                <!-- AI Feature -->
+                <div
+                    class="feature-card p-6 bg-brand-dark rounded-xl border border-gray-800 relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    </div>
+                    <i
+                        class="fas fa-magnifying-glass-chart text-3xl text-brand-accent mb-4 transform group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="font-bold text-lg mb-2 relative z-10">Computer Vision</h4>
+                    <p class="text-sm text-gray-400 relative z-10">Automatic crack, corrosion, and defect identification
+                        with classification.</p>
+                </div>
+                <!-- AI Feature -->
+                <div
+                    class="feature-card p-6 bg-brand-dark rounded-xl border border-gray-800 relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    </div>
+                    <i
+                        class="fas fa-cubes text-3xl text-brand-accent mb-4 transform group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="font-bold text-lg mb-2 relative z-10">Digital Twins</h4>
+                    <p class="text-sm text-gray-400 relative z-10">Instant 3D reconstruction of sites for long-term
+                        asset monitoring.</p>
+                </div>
+                <!-- AI Feature -->
+                <div
+                    class="feature-card p-6 bg-brand-dark rounded-xl border border-gray-800 relative overflow-hidden group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    </div>
+                    <i
+                        class="fas fa-wrench text-3xl text-brand-accent mb-4 transform group-hover:scale-110 transition-transform duration-300"></i>
+                    <h4 class="font-bold text-lg mb-2 relative z-10">Predictive Maintenance</h4>
+                    <p class="text-sm text-gray-400 relative z-10">Fleet health monitoring and automated maintenance
+                        alerts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="package" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Professional Infrastructure Inspection Suite
+            </h2>
+
+            <div class="glass-panel p-8 md:p-12 rounded-3xl border border-gray-700">
+                <p class="text-lg text-gray-300 mb-10 text-center max-w-4xl mx-auto">
+                    A complete, integrated ecosystem consisting of hardware, intelligent software, cloud analytics,
+                    training, and
+                    ongoing technical support.
+                </p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Column 1 -->
+                    <div>
+                        <h3
+                            class="text-xl font-bold text-white border-b border-gray-700 pb-2 mb-4 flex items-center gap-2">
+                            <i class="fas fa-plane text-brand-accent"></i> Hardware
+                        </h3>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>AeroVision X1 Enterprise Drone</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>48 MP RGB Inspection Camera</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Thermal Imaging Camera</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>RTK Survey Module</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>4 Intelligent Batteries & Charger</li>
+                        </ul>
+                    </div>
+                    <!-- Column 2 -->
+                    <div>
+                        <h3
+                            class="text-xl font-bold text-white border-b border-gray-700 pb-2 mb-4 flex items-center gap-2">
+                            <i class="fas fa-cloud text-brand-accent"></i> Software (12 Mo.)
+                        </h3>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>AeroVision Insight™ Cloud</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Automated Inspection Engine</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Digital Twin Workspace</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Automated Compliance Reports</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Fleet Management Dashboard</li>
+                        </ul>
+                    </div>
+                    <!-- Column 3 -->
+                    <div>
+                        <h3
+                            class="text-xl font-bold text-white border-b border-gray-700 pb-2 mb-4 flex items-center gap-2">
+                            <i class="fas fa-chalkboard-user text-brand-accent"></i> Services
+                        </h3>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>5-Day Enterprise Training (5 Users)</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Site Deployment & Commissioning</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>2-Year Manufacturer Warranty</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>24Ã—7 Technical Support</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Annual Preventive Maintenance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-20 bg-brand-gray border-y border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Transparent Enterprise Pricing</h2>
+                <p class="text-gray-400">Invest in an end-to-end aerial intelligence platform. Select your upgrades
+                    below to instantly estimate your comprehensive package.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 items-start">
+
+                <!-- Main Package Display -->
+                <div
+                    class="lg:col-span-2 bg-brand-dark p-8 rounded-2xl border border-brand-accent relative shadow-[0_0_30px_rgba(245,158,11,0.15)]">
+                    <div
+                        class="absolute top-0 right-0 bg-brand-accent text-brand-dark font-bold text-xs uppercase px-3 py-1 rounded-bl-lg rounded-tr-lg">
+                        Complete Suite</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Professional Infrastructure Suite</h3>
+                    <p class="text-gray-400 mb-6 text-sm">Everything you need to launch data-driven inspections today.
+                    </p>
+                    <div class="flex items-baseline mb-8">
+                        <span class="text-4xl font-extrabold text-white">₹<span
+                                id="display-price">9,99,000</span></span>
+                        <span class="ml-2 text-base font-normal text-gray-500">Total Estimate</span>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-4 mb-8">
+                        <div class="flex items-center gap-2 text-sm text-gray-300"><i
+                                class="fas fa-drone text-brand-accent"></i> X1 Enterprise Drone included</div>
+                        <div class="flex items-center gap-2 text-sm text-gray-300"><i
+                                class="fas fa-camera text-brand-accent"></i> RGB & Thermal Payloads</div>
+                        <div class="flex items-center gap-2 text-sm text-gray-300"><i
+                                class="fas fa-laptop-code text-brand-accent"></i> 12-Month Analytics Cloud Access</div>
+                        <div class="flex items-center gap-2 text-sm text-gray-300"><i
+                                class="fas fa-certificate text-brand-accent"></i> 5-User Training & Certification</div>
+                    </div>
+
+                    <button
+                        class="quote-btn shine-btn w-full py-4 rounded-lg bg-brand-accent text-brand-dark font-bold text-lg hover:bg-brand-accentHover transition-all transform hover:scale-[1.02] active:scale-95 shadow-[0_5px_15px_rgba(245,158,11,0.3)]">
+                        Request Formal Quote
+                    </button>
+                </div>
+
+                <!-- Interactive Add-ons -->
+                <div class="space-y-4">
+                    <h4 class="text-white font-bold mb-2">Customize Package:</h4>
+
+                    <div
+                        class="addon-card block bg-[#121826] p-5 rounded-xl border border-gray-700 cursor-pointer select-none">
+                        <input type="checkbox" class="addon-checkbox hidden" data-price="400000">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-white mb-1">LiDAR Upgrade</h4>
+                                <p class="text-xs text-gray-400">High-precision 3D topographic scanning.</p>
+                            </div>
+                            <div
+                                class="checkbox-ui w-6 h-6 rounded border border-gray-500 flex items-center justify-center text-transparent transition-colors mt-1">
+                                <i class="fas fa-check text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="text-lg font-bold text-brand-accent mt-3">+ ₹4,00,000</div>
+                    </div>
+
+                    <div
+                        class="addon-card block bg-[#121826] p-5 rounded-xl border border-gray-700 cursor-pointer select-none">
+                        <input type="checkbox" class="addon-checkbox hidden" data-price="300000">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-white mb-1">Enterprise Fleet Mgmt</h4>
+                                <p class="text-xs text-gray-400">Dashboard for fleets of 10+ drones.</p>
+                            </div>
+                            <div
+                                class="checkbox-ui w-6 h-6 rounded border border-gray-500 flex items-center justify-center text-transparent transition-colors mt-1">
+                                <i class="fas fa-check text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="text-lg font-bold text-brand-accent mt-3">+ ₹3,00,000<span
+                                class="text-xs font-normal text-gray-500">/yr</span></div>
+                    </div>
+
+                    <div
+                        class="addon-card block bg-[#121826] p-5 rounded-xl border border-gray-700 cursor-pointer select-none">
+                        <input type="checkbox" class="addon-checkbox hidden" data-price="75000">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-white mb-1">Annual Maintenance</h4>
+                                <p class="text-xs text-gray-400">Priority support and preventative service.</p>
+                            </div>
+                            <div
+                                class="checkbox-ui w-6 h-6 rounded border border-gray-500 flex items-center justify-center text-transparent transition-colors mt-1">
+                                <i class="fas fa-check text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="text-lg font-bold text-brand-accent mt-3">+ ₹75,000<span
+                                class="text-xs font-normal text-gray-500">/yr</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="images/Aerovision.png" alt="AeroVision Logo"
+                            class="h-10 w-10 object-contain rounded shadow-lg">
+                        <span class="font-bold text-xl tracking-wide text-white">AeroVision<span
+                                class="text-brand-accent">.</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-md">
+                        Transforming industries through autonomous aerial intelligence. We build the hardware and
+                        software required to make infrastructure inspection safer, faster, and smarter.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">AeroVision X1</a></li>
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">AeroVision Insight™ Cloud</a>
+                        </li>
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">Payload Options</a></li>
+                        <li><a href="#" class="hover:text-brand-accent transition-colors">Training Programs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-envelope mr-2 text-brand-accent"></i> enterprise@aerovision.com</li>
+                        <li><i class="fas fa-phone mr-2 text-brand-accent"></i> +91 (800) 123-4567</li>
+                        <li><i class="fas fa-location-dot mr-2 text-brand-accent"></i> Tech Park, Innovation Hub</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">&copy; 2026 AeroVision Intelligence Systems. All rights
+                    reserved.</p>
+                <div class="flex space-x-4 text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-linkedin text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-twitter text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition-colors"><i class="fab fa-youtube text-xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Quotation Modal -->
+    <div id="quote-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 opacity-0 invisible transition-all duration-300">
+        <div class="bg-brand-dark border border-gray-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300"
+            id="quote-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">Request Quotation</h3>
+                <button id="close-quote-modal" class="text-gray-400 hover:text-white transition-colors"><i
+                        class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="quote-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                    <input type="text" required
+                        class="w-full bg-[#121826] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Organization Name</label>
+                    <input type="text" required
+                        class="w-full bg-[#121826] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Organization Email</label>
+                    <input type="email" required
+                        class="w-full bg-[#121826] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+                    <input type="tel" required
+                        class="w-full bg-[#121826] border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-brand-accent">
+                </div>
+                <button type="submit"
+                    class="w-full py-3 mt-4 rounded-lg bg-brand-accent text-brand-dark font-bold hover:bg-brand-accentHover transition-colors">Submit
+                    Request</button>
+            </form>
+            <div id="quote-success"
+                class="hidden text-green-400 text-center font-medium mt-4 p-3 bg-green-900/30 rounded-lg">
+                Your request has been submitted! We will contact you shortly.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-[#1E293B]', 'shadow-lg');
+                navbar.classList.remove('glass-panel');
+            } else {
+                navbar.classList.remove('bg-[#1E293B]', 'shadow-lg');
+                navbar.classList.add('glass-panel');
+            }
+        });
+
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Smooth scroll for anchor links (fallback for browsers not supporting scroll-smooth class)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                menu.classList.add('hidden'); // Close mobile menu if open
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Stop observing once animated in
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Apply reveal class to top level elements inside sections and observe them
+        document.querySelectorAll('section > div').forEach((el) => {
+            el.classList.add('reveal');
+            observer.observe(el);
+        });
+
+        // --- DYNAMIC COMPONENTS START ---
+
+        // 1. Animated Number Counters
+        const counterElements = document.querySelectorAll('.counter');
+        let countersAnimated = false;
+
+        const animateCounters = () => {
+            counterElements.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 16); // Approx 60fps calculation
+
+                let current = 0;
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCounter();
+            });
+        };
+
+        // Observe the counter section to trigger animation only when scrolled into view
+        const counterSection = document.getElementById('counter-section');
+        if (counterSection) {
+            const counterObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !countersAnimated) {
+                    animateCounters();
+                    countersAnimated = true;
+                }
+            }, { threshold: 0.5 });
+            counterObserver.observe(counterSection);
+        }
+
+        // 2. Interactive Pricing Calculator
+        const basePrice = 999000;
+        const displayPriceEl = document.getElementById('display-price');
+        const addonCards = document.querySelectorAll('.addon-card');
+        const checkboxes = document.querySelectorAll('.addon-checkbox');
+
+        // Formats numbers to Indian Rupee formatting (e.g. 9,99,000)
+        const formatCurrency = (num) => {
+            return num.toLocaleString('en-IN');
+        };
+
+        // Smoothly animates the transition between price numbers
+        const animateValue = (obj, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Ease out quad formula for smooth deceleration
+                const easeProgress = progress * (2 - progress);
+                const currentVal = Math.floor(easeProgress * (end - start) + start);
+
+                obj.innerHTML = formatCurrency(currentVal);
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    obj.innerHTML = formatCurrency(end); // Ensure exact final number
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const calculateTotal = () => {
+            let total = basePrice;
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    total += parseInt(cb.getAttribute('data-price'));
+                }
+            });
+
+            // Get current displayed price (remove commas for math)
+            const currentDisplayed = parseInt(displayPriceEl.innerText.replace(/,/g, ''));
+            // Trigger animation if the price actually changed
+            if (currentDisplayed !== total) {
+                animateValue(displayPriceEl, currentDisplayed, total, 400);
+            }
+        };
+
+        // Add click event listeners to custom addon cards
+        addonCards.forEach((card, index) => {
+            const checkbox = checkboxes[index];
+            card.addEventListener('click', () => {
+                // Toggle the hidden native checkbox
+                checkbox.checked = !checkbox.checked;
+
+                // Toggle active styling
+                if (checkbox.checked) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+
+                // Recalculate and animate total
+                calculateTotal();
+            });
+        });
+        // --- DYNAMIC COMPONENTS END ---
+
+        // Quote Modal Logic
+        const quoteModal = document.getElementById('quote-modal');
+        const quoteModalContent = document.getElementById('quote-modal-content');
+        const closeQuoteModal = document.getElementById('close-quote-modal');
+        const quoteBtns = document.querySelectorAll('.quote-btn');
+        const quoteForm = document.getElementById('quote-form');
+        const quoteSuccess = document.getElementById('quote-success');
+
+        const openQuoteModal = (e) => {
+            if (e) e.preventDefault();
+            quoteModal.classList.remove('invisible', 'opacity-0');
+            quoteModalContent.classList.remove('scale-95');
+            quoteModalContent.classList.add('scale-100');
+        };
+
+        const closeQuoteModalHandler = () => {
+            quoteModal.classList.add('opacity-0');
+            quoteModalContent.classList.remove('scale-100');
+            quoteModalContent.classList.add('scale-95');
+            setTimeout(() => {
+                quoteModal.classList.add('invisible');
+                quoteForm.reset();
+                quoteForm.style.display = 'block';
+                quoteSuccess.classList.add('hidden');
+            }, 300);
+        };
+
+        quoteBtns.forEach(btn => btn.addEventListener('click', openQuoteModal));
+        closeQuoteModal.addEventListener('click', closeQuoteModalHandler);
+
+        quoteModal.addEventListener('click', (e) => {
+            if (e.target === quoteModal) closeQuoteModalHandler();
+        });
+
+        quoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const submitBtn = quoteForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'Submitting...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                quoteForm.style.display = 'none';
+                quoteSuccess.classList.remove('hidden');
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
