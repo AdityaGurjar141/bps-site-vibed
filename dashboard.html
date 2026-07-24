@@ -200,16 +200,24 @@
     </style>
 </head>
 
-<body class="antialiased h-screen overflow-hidden selection:bg-brand-accent selection:text-white flex">
+<body class="antialiased h-screen overflow-hidden selection:bg-brand-accent selection:text-white flex relative">
+
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay"
+        class="fixed inset-0 bg-black/50 z-20 hidden lg:hidden backdrop-blur-sm transition-opacity opacity-0"></div>
 
     <!-- Sidebar -->
-    <aside class="w-72 glass-panel border-r border-gray-800 flex flex-col h-full z-20">
-        <div class="p-6 flex items-center gap-3 border-b border-gray-800">
+    <aside id="sidebar"
+        class="w-72 glass-panel border-r border-gray-800 flex flex-col h-full z-30 fixed lg:relative transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-6 flex justify-between items-center border-b border-gray-800">
             <a href="index.html" class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="images/Aerovision.png" alt="Logo" class="h-10 w-10 object-contain rounded-md shadow-lg"
                     onerror="this.src='https://via.placeholder.com/40x40?text=A'">
                 <span class="font-bold text-xl text-white">AeroVision<span class="text-brand-accent">.</span></span>
             </a>
+            <button id="close-sidebar" class="lg:hidden text-gray-400 hover:text-white transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
 
         <div class="p-4 mt-2">
@@ -258,29 +266,36 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 relative overflow-y-auto bg-brand-dark">
+    <main class="flex-1 relative overflow-y-auto bg-brand-dark w-full">
         <!-- Ambient Background -->
         <div class="fixed inset-0 z-0 pointer-events-none opacity-20">
             <div class="absolute top-0 right-0 w-96 h-96 bg-brand-accent rounded-full filter blur-[100px]"></div>
             <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-900 rounded-full filter blur-[150px]"></div>
         </div>
 
-        <div class="relative z-10 p-8">
+        <div class="relative z-10 p-4 md:p-8">
 
             <!-- Header -->
-            <header class="flex justify-between items-center mb-8">
-                <div>
-                    <h1 class="text-3xl font-bold text-white mb-1" id="page-title">AeroVision Insight™ Cloud</h1>
-                    <p class="text-gray-400 text-sm">Real-time telemetry and data processing hub.</p>
+            <header class="flex flex-wrap justify-between items-center mb-6 md:mb-8 gap-4">
+                <div class="flex items-center gap-3">
+                    <button id="open-sidebar" class="lg:hidden text-gray-300 hover:text-white transition p-2 -ml-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-xl md:text-3xl font-bold text-white mb-1" id="page-title">AeroVision Insight™
+                            Cloud</h1>
+                        <p class="text-gray-400 text-xs md:text-sm">Real-time telemetry and data processing hub.</p>
+                    </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2">
+                <div class="flex items-center gap-2 md:gap-4 ml-auto">
+                    <div class="glass-panel px-3 py-1.5 md:px-4 md:py-2 rounded-full flex items-center gap-2">
                         <div class="w-2 h-2 rounded-full bg-brand-success animate-pulse"></div>
-                        <span class="text-sm font-medium text-gray-300">System Online</span>
+                        <span class="text-xs md:text-sm font-medium text-gray-300 hidden sm:inline">System Online</span>
+                        <span class="text-xs md:text-sm font-medium text-gray-300 sm:hidden">Online</span>
                     </div>
                     <button
-                        class="bg-brand-gray hover:bg-gray-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">
-                        <i class="fas fa-bell"></i>
+                        class="bg-brand-gray hover:bg-gray-700 text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-colors">
+                        <i class="fas fa-bell text-sm md:text-base"></i>
                     </button>
                 </div>
             </header>
@@ -421,7 +436,7 @@
                                 class="absolute top-[30%] left-[40%] w-[120px] h-[90px] border border-brand-accent rounded pointer-events-none bg-brand-accent/10">
                                 <div
                                     class="w-full bg-brand-accent text-brand-dark text-[10px] font-bold px-1 flex justify-between">
-                                    <span>CORROSION</span><span>94%</span>
+                                    <span>Detecting</span><span>94%</span>
                                 </div>
                             </div>
 
@@ -430,15 +445,11 @@
                                 class="absolute top-[60%] left-[65%] w-[80px] h-[80px] border border-brand-success rounded pointer-events-none bg-brand-success/10">
                                 <div
                                     class="w-full bg-brand-success text-brand-dark text-[10px] font-bold px-1 flex justify-between">
-                                    <span>VALVE_OK</span><span>99%</span>
+                                    <span>Operational</span><span>99%</span>
                                 </div>
                             </div>
 
-                            <!-- Drone Wireframe Graphic Overlay -->
-                            <div class="absolute bottom-16 right-16 w-32 md:w-48 opacity-60 pointer-events-none">
-                                <img src="images/action_drone_1.png" alt="Drone Hologram" class="w-full h-auto"
-                                    style="filter: invert(1) sepia(1) hue-rotate(90deg) saturate(4) drop-shadow(0 0 10px #10B981); mix-blend-mode: screen;">
-                            </div>
+
 
                             <!-- Overlay Metrics -->
                             <div
@@ -541,19 +552,19 @@
 
             <!-- TAB: Digital Twin -->
             <div id="tab-digital-twin" class="tab-content">
-                <div class="glass-card p-2 h-[600px] relative overflow-hidden flex flex-col">
+                <div class="glass-card p-2 h-[400px] md:h-[600px] relative overflow-hidden flex flex-col">
                     <div
-                        class="p-4 border-b border-gray-800 flex justify-between items-center bg-brand-dark/50 rounded-t-lg z-20 relative">
-                        <div class="flex gap-2" id="dt-controls">
+                        class="p-2 md:p-4 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-brand-dark/50 rounded-t-lg z-20 relative">
+                        <div class="flex flex-wrap gap-2" id="dt-controls">
                             <button id="btn-3d"
-                                class="px-3 py-1 bg-brand-accent text-brand-dark text-xs font-bold rounded transition">3D
+                                class="px-2 py-1 md:px-3 md:py-1 bg-brand-accent text-brand-dark text-[10px] md:text-xs font-bold rounded transition">3D
                                 View</button>
                             <button id="btn-thermal"
-                                class="px-3 py-1 bg-brand-gray text-white hover:bg-gray-600 text-xs font-bold rounded transition">Thermal</button>
+                                class="px-2 py-1 md:px-3 md:py-1 bg-brand-gray text-white hover:bg-gray-600 text-[10px] md:text-xs font-bold rounded transition">Thermal</button>
                             <button id="btn-wireframe"
-                                class="px-3 py-1 bg-brand-gray text-white hover:bg-gray-600 text-xs font-bold rounded transition">Wireframe</button>
+                                class="px-2 py-1 md:px-3 md:py-1 bg-brand-gray text-white hover:bg-gray-600 text-[10px] md:text-xs font-bold rounded transition">Wireframe</button>
                         </div>
-                        <div class="text-gray-400 text-xs font-mono">
+                        <div class="text-gray-400 text-[10px] md:text-xs font-mono hidden xs:block">
                             COORD: N 45° 23' 11" / W 122° 34' 59" | ZOOM: 1.4x
                         </div>
                     </div>
@@ -561,7 +572,7 @@
                     <div class="flex-1 relative overflow-hidden bg-black">
                         <video id="dt-video"
                             class="absolute inset-0 w-full h-full object-cover transition-all duration-700" autoplay
-                            loop muted playsinline src="images/3dview-video.mp4">
+                            loop muted playsinline src="images/Thermal-video.mp4">
                         </video>
                         <div class="absolute inset-0 bg-[#1E293B]/20 mix-blend-multiply pointer-events-none"></div>
                         <!-- Mock Grid -->
@@ -594,17 +605,17 @@
 
             <!-- TAB: Compliance Reports -->
             <div id="tab-compliance" class="tab-content">
-                <div class="glass-card p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h4 class="text-xl font-semibold text-white">Automated Audit Logs</h4>
+                <div class="glass-card p-4 md:p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <h4 class="text-lg md:text-xl font-semibold text-white">Automated Audit Logs</h4>
                         <button
-                            class="bg-brand-gray hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-600">
+                            class="bg-brand-gray hover:bg-gray-700 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors border border-gray-600 w-full sm:w-auto">
                             <i class="fas fa-download mr-2"></i> Export All
                         </button>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                    <div class="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
                             <thead>
                                 <tr class="border-b border-gray-700 text-gray-400 text-sm">
                                     <th class="pb-3 pl-2 font-medium">Report ID</th>
@@ -812,6 +823,33 @@
                 'tab-fleet': 'Fleet Management Dashboard'
             };
 
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const openSidebarBtn = document.getElementById('open-sidebar');
+            const closeSidebarBtn = document.getElementById('close-sidebar');
+
+            const toggleSidebar = () => {
+                const isOpen = !sidebar.classList.contains('-translate-x-full');
+                if (isOpen) {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebarOverlay.classList.remove('opacity-100');
+                    sidebarOverlay.classList.add('opacity-0');
+                    setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+                } else {
+                    sidebarOverlay.classList.remove('hidden');
+                    // Small delay to allow display:block to apply before opacity transition
+                    setTimeout(() => {
+                        sidebar.classList.remove('-translate-x-full');
+                        sidebarOverlay.classList.remove('opacity-0');
+                        sidebarOverlay.classList.add('opacity-100');
+                    }, 10);
+                }
+            };
+
+            if (openSidebarBtn) openSidebarBtn.addEventListener('click', toggleSidebar);
+            if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+            if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     // Remove active from all
@@ -825,6 +863,11 @@
 
                     // Update Title
                     pageTitle.innerText = tabTitles[targetId];
+
+                    // Close sidebar on mobile after selection
+                    if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) {
+                        toggleSidebar();
+                    }
                 });
             });
 
@@ -837,26 +880,27 @@
 
             const resetBtns = () => {
                 allBtns.forEach(btn => {
-                    btn.className = 'px-3 py-1 bg-brand-gray text-white hover:bg-gray-600 text-xs font-bold rounded transition';
+                    btn.className = 'px-2 py-1 md:px-3 md:py-1 bg-brand-gray text-white hover:bg-gray-600 text-[10px] md:text-xs font-bold rounded transition';
                 });
-                dtVideo.classList.remove('video-thermal', 'video-wireframe');
+                dtVideo.classList.remove('video-thermal');
             };
 
             const setActiveBtn = (btn) => {
-                btn.className = 'px-3 py-1 bg-brand-accent text-brand-dark text-xs font-bold rounded transition';
+                btn.className = 'px-2 py-1 md:px-3 md:py-1 bg-brand-accent text-brand-dark text-[10px] md:text-xs font-bold rounded transition';
             };
 
             btn3d.addEventListener('click', () => {
                 resetBtns();
                 setActiveBtn(btn3d);
-                if (!dtVideo.src.endsWith('images/3dview-video.mp4')) {
-                    dtVideo.src = 'images/3dview-video.mp4';
+                if (!dtVideo.src.endsWith('images/Thermal-video.mp4')) {
+                    dtVideo.src = 'images/Thermal-video.mp4';
                 }
             });
 
             btnThermal.addEventListener('click', () => {
                 resetBtns();
                 setActiveBtn(btnThermal);
+                dtVideo.classList.add('video-thermal');
                 if (!dtVideo.src.endsWith('images/Thermal-video.mp4')) {
                     dtVideo.src = 'images/Thermal-video.mp4';
                 }
