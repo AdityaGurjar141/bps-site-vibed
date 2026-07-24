@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroVision Insight™ Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Mock Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',
+                            gray: '#1E293B',
+                            light: '#E2E8F0',
+                            accent: '#F59E0B',
+                            accentHover: '#D97706',
+                            success: '#10B981',
+                            danger: '#EF4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0F19;
+            color: #E2E8F0;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #F59E0B, #FCD34D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F59E0B;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(245, 158, 11, 0.15);
+            border-right: 3px solid #F59E0B;
+            color: #F59E0B;
+        }
+
+        /* Radar Scanner Animation for Inspection */
+        .radar {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 2px solid rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.1);
+            overflow: hidden;
+        }
+
+        .radar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 50%;
+            background: linear-gradient(45deg, rgba(16, 185, 129, 0) 0%, rgba(16, 185, 129, 0.8) 100%);
+            transform-origin: 0% 0%;
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Video Filters */
+        .video-thermal {
+            filter: grayscale(1) invert(1) sepia(1) hue-rotate(180deg) saturate(5) contrast(2);
+        }
+
+        .video-wireframe {
+            filter: invert(1) sepia(1) hue-rotate(90deg) saturate(4) contrast(3) brightness(0.8) drop-shadow(0 0 2px #10B981);
+            mix-blend-mode: screen;
+        }
+
+        /* Tracking Box Animation */
+        @keyframes track-move {
+            0% {
+                top: 20%;
+                left: 30%;
+                width: 120px;
+                height: 120px;
+            }
+
+            25% {
+                top: 25%;
+                left: 35%;
+                width: 130px;
+                height: 110px;
+            }
+
+            50% {
+                top: 22%;
+                left: 38%;
+                width: 125px;
+                height: 125px;
+            }
+
+            75% {
+                top: 18%;
+                left: 32%;
+                width: 115px;
+                height: 130px;
+            }
+
+            100% {
+                top: 20%;
+                left: 30%;
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        .tracking-box {
+            animation: track-move 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="antialiased h-screen overflow-hidden selection:bg-brand-accent selection:text-white flex">
+
+    <!-- Sidebar -->
+    <aside class="w-72 glass-panel border-r border-gray-800 flex flex-col h-full z-20">
+        <div class="p-6 flex items-center gap-3 border-b border-gray-800">
+            <a href="index.html" class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+                <img src="images/Aerovision.png" alt="Logo" class="h-10 w-10 object-contain rounded-md shadow-lg"
+                    onerror="this.src='https://via.placeholder.com/40x40?text=A'">
+                <span class="font-bold text-xl text-white">AeroVision<span class="text-brand-accent">.</span></span>
+            </a>
+        </div>
+
+        <div class="p-4 mt-2">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 ml-3">Software Suite</p>
+            <nav class="space-y-2">
+                <button data-tab="tab-cloud"
+                    class="sidebar-link active w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 font-medium text-left">
+                    <i class="fas fa-cloud text-lg w-6 text-center"></i>
+                    Insight™ Cloud
+                </button>
+                <button data-tab="tab-inspection"
+                    class="sidebar-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 font-medium text-left">
+                    <i class="fas fa-microchip text-lg w-6 text-center"></i>
+                    Inspection Engine
+                </button>
+                <button data-tab="tab-digital-twin"
+                    class="sidebar-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 font-medium text-left">
+                    <i class="fas fa-cube text-lg w-6 text-center"></i>
+                    Digital Twin
+                </button>
+                <button data-tab="tab-compliance"
+                    class="sidebar-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 font-medium text-left">
+                    <i class="fas fa-file-signature text-lg w-6 text-center"></i>
+                    Compliance Reports
+                </button>
+                <button data-tab="tab-fleet"
+                    class="sidebar-link w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 font-medium text-left">
+                    <i class="fas fa-fighter-jet text-lg w-6 text-center"></i>
+                    Fleet Management
+                </button>
+            </nav>
+        </div>
+
+        <div class="mt-auto p-4 border-t border-gray-800">
+            <div class="flex items-center gap-3 px-2">
+                <div
+                    class="w-10 h-10 rounded-full border-2 border-brand-accent bg-gray-700 flex items-center justify-center text-gray-400">
+                    <i class="fas fa-user text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-white">Aditya</p>
+                    <p class="text-xs text-gray-400">Site Lead</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 relative overflow-y-auto bg-brand-dark">
+        <!-- Ambient Background -->
+        <div class="fixed inset-0 z-0 pointer-events-none opacity-20">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-brand-accent rounded-full filter blur-[100px]"></div>
+            <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-900 rounded-full filter blur-[150px]"></div>
+        </div>
+
+        <div class="relative z-10 p-8">
+
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-1" id="page-title">AeroVision Insight™ Cloud</h1>
+                    <p class="text-gray-400 text-sm">Real-time telemetry and data processing hub.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="glass-panel px-4 py-2 rounded-full flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-brand-success animate-pulse"></div>
+                        <span class="text-sm font-medium text-gray-300">System Online</span>
+                    </div>
+                    <button
+                        class="bg-brand-gray hover:bg-gray-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB: Cloud -->
+            <div id="tab-cloud" class="tab-content active">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="glass-card p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-400 text-sm font-medium">Total Data Processed</p>
+                                <h3 class="text-3xl font-bold text-white mt-1">1,248 <span
+                                        class="text-xl text-gray-500">TB</span></h3>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-lg bg-brand-accent/20 flex items-center justify-center text-brand-accent">
+                                <i class="fas fa-database text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-sm text-brand-success"><i class="fas fa-arrow-up mr-1"></i> +12% this week</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-400 text-sm font-medium">Active Syncs</p>
+                                <h3 class="text-3xl font-bold text-white mt-1">4 <span
+                                        class="text-xl text-gray-500">Drones</span></h3>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                <i class="fas fa-sync fa-spin text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-400">Bandwidth: 450 Mbps</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-400 text-sm font-medium">Storage Health</p>
+                                <h3 class="text-3xl font-bold text-white mt-1">99.9<span
+                                        class="text-xl text-gray-500">%</span></h3>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-lg bg-brand-success/20 flex items-center justify-center text-brand-success">
+                                <i class="fas fa-check-circle text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-400">Redundancy Array Optimal</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 lg:col-span-2">
+                        <h4 class="text-lg font-semibold text-white mb-4">Data Uplink Velocity (24h)</h4>
+                        <div class="h-64 w-full">
+                            <canvas id="cloudChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4">Recent Uploads</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded bg-red-500/20 text-red-400 flex items-center justify-center">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-white">Sector_7G_Survey.pdf</p>
+                                    <p class="text-xs text-gray-400">2 mins ago • 14 MB</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                                    <i class="fas fa-images"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-white">Thermal_Scan_Raw.zip</p>
+                                    <p class="text-xs text-gray-400">15 mins ago • 1.2 GB</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded bg-brand-accent/20 text-brand-accent flex items-center justify-center">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-white">Point_Cloud_V2.obj</p>
+                                    <p class="text-xs text-gray-400">1 hour ago • 4.5 GB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Inspection Engine -->
+            <div id="tab-inspection" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+
+                    <!-- Video Feed Area (Takes up 2/3 cols on lg, 3/4 on xl) -->
+                    <div
+                        class="glass-card p-0 flex flex-col relative overflow-hidden min-h-[350px] md:min-h-[450px] lg:min-h-[500px] lg:col-span-2 xl:col-span-3 rounded-lg border border-gray-800">
+                        <div class="p-2 border-b border-gray-800 bg-brand-dark flex justify-between items-center z-20">
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="text-brand-success text-xs font-bold px-2 py-0.5 bg-brand-success/20 rounded">LIVE</span>
+                                <span class="text-gray-300 text-xs font-mono">CAM_04_PIPELINE</span>
+                            </div>
+                            <div class="text-gray-500 text-xs font-mono flex gap-4 hidden sm:flex">
+                                <span>COORD: 34.0522° N, 118.2437° W</span>
+                                <span>ELEV: 412ft</span>
+                            </div>
+                        </div>
+
+                        <div class="relative flex-1 bg-black">
+                            <video class="absolute inset-0 w-full h-full object-cover opacity-80" autoplay loop muted
+                                playsinline>
+                                <source src="images/Thermal-video.mp4" type="video/mp4">
+                            </video>
+
+                            <!-- Static HUD Elements (Less Animated) -->
+                            <div class="absolute inset-0 bg-brand-dark/20 mix-blend-multiply pointer-events-none"></div>
+
+                            <!-- Center Crosshair -->
+                            <div
+                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                                <div
+                                    class="w-12 h-[1px] bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                </div>
+                                <div
+                                    class="w-[1px] h-12 bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                </div>
+                            </div>
+
+                            <!-- Static Bounding Box 1 -->
+                            <div
+                                class="absolute top-[30%] left-[40%] w-[120px] h-[90px] border border-brand-accent rounded pointer-events-none bg-brand-accent/10">
+                                <div
+                                    class="w-full bg-brand-accent text-brand-dark text-[10px] font-bold px-1 flex justify-between">
+                                    <span>CORROSION</span><span>94%</span>
+                                </div>
+                            </div>
+
+                            <!-- Static Bounding Box 2 -->
+                            <div
+                                class="absolute top-[60%] left-[65%] w-[80px] h-[80px] border border-brand-success rounded pointer-events-none bg-brand-success/10">
+                                <div
+                                    class="w-full bg-brand-success text-brand-dark text-[10px] font-bold px-1 flex justify-between">
+                                    <span>VALVE_OK</span><span>99%</span>
+                                </div>
+                            </div>
+
+                            <!-- Drone Wireframe Graphic Overlay -->
+                            <div class="absolute bottom-16 right-16 w-32 md:w-48 opacity-60 pointer-events-none">
+                                <img src="images/action_drone_1.png" alt="Drone Hologram" class="w-full h-auto"
+                                    style="filter: invert(1) sepia(1) hue-rotate(90deg) saturate(4) drop-shadow(0 0 10px #10B981); mix-blend-mode: screen;">
+                            </div>
+
+                            <!-- Overlay Metrics -->
+                            <div
+                                class="absolute bottom-4 left-4 p-2 bg-brand-dark/80 backdrop-blur rounded border border-gray-700 text-xs font-mono text-brand-success">
+                                <p class="mb-1">SENSOR <span class="text-white">ON</span></p>
+                                <p class="mb-1">LATENCY <span class="text-white">12ms</span></p>
+                                <p>FPS <span class="text-white">59.94</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Detailed Metrics (Takes up 1 col on lg and xl) -->
+                    <div class="flex flex-col gap-4 lg:col-span-1 xl:col-span-1">
+
+                        <!-- AI Confidence Metrics -->
+                        <div class="glass-card p-4">
+                            <h4 class="text-sm font-semibold text-white mb-3 uppercase tracking-wider text-gray-400">AI
+                                Confidence Metrics</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span class="text-gray-300">Structural Stress</span>
+                                        <span class="text-brand-success font-bold">98.5%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-brand-success h-1.5 rounded-full" style="width: 98.5%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span class="text-gray-300">Thermal Leak</span>
+                                        <span class="text-brand-accent font-bold">95.2%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-brand-accent h-1.5 rounded-full" style="width: 95.2%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span class="text-gray-300">Micro-fracture</span>
+                                        <span class="text-brand-accent font-bold">89.4%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-brand-accent h-1.5 rounded-full" style="width: 89.4%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Telemetry -->
+                        <div class="glass-card p-4">
+                            <h4 class="text-sm font-semibold text-white mb-3 uppercase tracking-wider text-gray-400">
+                                Live Telemetry</h4>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="bg-brand-dark/50 p-2 rounded border border-gray-700">
+                                    <p class="text-gray-500 mb-1">Drone Temp</p>
+                                    <p class="text-white font-mono font-bold">42°C</p>
+                                </div>
+                                <div class="bg-brand-dark/50 p-2 rounded border border-gray-700">
+                                    <p class="text-gray-500 mb-1">Wind Spd</p>
+                                    <p class="text-white font-mono font-bold">14kts</p>
+                                </div>
+                                <div class="bg-brand-dark/50 p-2 rounded border border-gray-700">
+                                    <p class="text-gray-500 mb-1">Signal DB</p>
+                                    <p class="text-white font-mono font-bold">-68 dBm</p>
+                                </div>
+                                <div class="bg-brand-dark/50 p-2 rounded border border-gray-700">
+                                    <p class="text-gray-500 mb-1">Battery</p>
+                                    <p class="text-brand-success font-mono font-bold">64%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Log -->
+                        <div class="glass-card p-4 flex-1 flex flex-col">
+                            <h4 class="text-sm font-semibold text-white mb-3 uppercase tracking-wider text-gray-400">
+                                Analysis Log</h4>
+                            <div class="flex-1 overflow-y-auto space-y-2 text-xs font-mono pr-1">
+                                <div class="border-l-2 border-brand-success pl-2">
+                                    <span class="text-gray-500 block text-[10px]">10:14:22</span>
+                                    <span class="text-gray-300">Valve integrity confirmed (Sector 4).</span>
+                                </div>
+                                <div class="border-l-2 border-brand-accent pl-2">
+                                    <span class="text-gray-500 block text-[10px]">10:13:45</span>
+                                    <span class="text-brand-accent">Minor surface rust detected. Logged.</span>
+                                </div>
+                                <div class="border-l-2 border-brand-success pl-2">
+                                    <span class="text-gray-500 block text-[10px]">10:11:10</span>
+                                    <span class="text-gray-300">Thermal profile nominal.</span>
+                                </div>
+                                <div class="border-l-2 border-brand-success pl-2">
+                                    <span class="text-gray-500 block text-[10px]">10:10:05</span>
+                                    <span class="text-gray-300">Scan initiated for Pipeline A4.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Digital Twin -->
+            <div id="tab-digital-twin" class="tab-content">
+                <div class="glass-card p-2 h-[600px] relative overflow-hidden flex flex-col">
+                    <div
+                        class="p-4 border-b border-gray-800 flex justify-between items-center bg-brand-dark/50 rounded-t-lg z-20 relative">
+                        <div class="flex gap-2" id="dt-controls">
+                            <button id="btn-3d"
+                                class="px-3 py-1 bg-brand-accent text-brand-dark text-xs font-bold rounded transition">3D
+                                View</button>
+                            <button id="btn-thermal"
+                                class="px-3 py-1 bg-brand-gray text-white hover:bg-gray-600 text-xs font-bold rounded transition">Thermal</button>
+                            <button id="btn-wireframe"
+                                class="px-3 py-1 bg-brand-gray text-white hover:bg-gray-600 text-xs font-bold rounded transition">Wireframe</button>
+                        </div>
+                        <div class="text-gray-400 text-xs font-mono">
+                            COORD: N 45° 23' 11" / W 122° 34' 59" | ZOOM: 1.4x
+                        </div>
+                    </div>
+
+                    <div class="flex-1 relative overflow-hidden bg-black">
+                        <video id="dt-video"
+                            class="absolute inset-0 w-full h-full object-cover transition-all duration-700" autoplay
+                            loop muted playsinline src="images/3dview-video.mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-[#1E293B]/20 mix-blend-multiply pointer-events-none"></div>
+                        <!-- Mock Grid -->
+                        <div
+                            class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none">
+                        </div>
+
+                        <!-- Overlay elements -->
+                        <div
+                            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-brand-accent/20 rounded-full flex items-center justify-center pointer-events-none">
+                            <div
+                                class="w-48 h-48 border border-brand-accent/30 rounded-full flex items-center justify-center">
+                                <div
+                                    class="w-32 h-32 border border-brand-accent/60 rounded-full animate-[spin_4s_linear_infinite] border-t-transparent">
+                                </div>
+                                <div class="absolute w-2 h-2 bg-brand-accent rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 glass-panel p-4 rounded-lg">
+                            <p class="text-xs text-gray-400 mb-1">Rendering Engine</p>
+                            <p class="text-sm text-brand-success font-bold">Unreal Engine 5 Core</p>
+                            <p class="text-xs text-white mt-2">Points: <span class="text-brand-accent">14,204,591</span>
+                            </p>
+                            <p class="text-xs text-white">FPS: <span class="text-brand-success">60</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Compliance Reports -->
+            <div id="tab-compliance" class="tab-content">
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="text-xl font-semibold text-white">Automated Audit Logs</h4>
+                        <button
+                            class="bg-brand-gray hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-600">
+                            <i class="fas fa-download mr-2"></i> Export All
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-700 text-gray-400 text-sm">
+                                    <th class="pb-3 pl-2 font-medium">Report ID</th>
+                                    <th class="pb-3 font-medium">Asset Inspected</th>
+                                    <th class="pb-3 font-medium">Date & Time</th>
+                                    <th class="pb-3 font-medium">Pilot / AI Mode</th>
+                                    <th class="pb-3 font-medium">Status</th>
+                                    <th class="pb-3 font-medium text-right pr-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+                                    <td class="py-4 pl-2 font-mono text-gray-300">#RPT-8942</td>
+                                    <td class="py-4 font-medium text-white">Offshore Rig Alpha</td>
+                                    <td class="py-4 text-gray-400">Oct 24, 09:15 AM</td>
+                                    <td class="py-4 text-gray-300"><i class="fas fa-robot text-brand-accent mr-1"></i>
+                                        Auto-Pilot</td>
+                                    <td class="py-4"><span
+                                            class="px-2 py-1 rounded text-xs font-bold bg-brand-success/20 text-brand-success">PASSED</span>
+                                    </td>
+                                    <td class="py-4 text-right pr-2">
+                                        <button class="text-brand-accent hover:text-white transition"><i
+                                                class="fas fa-file-pdf text-lg"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+                                    <td class="py-4 pl-2 font-mono text-gray-300">#RPT-8941</td>
+                                    <td class="py-4 font-medium text-white">Solar Farm Sec-B</td>
+                                    <td class="py-4 text-gray-400">Oct 23, 14:30 PM</td>
+                                    <td class="py-4 text-gray-300"><i class="fas fa-user text-blue-400 mr-1"></i> Manual
+                                        (Cmdr. Shepard)</td>
+                                    <td class="py-4"><span
+                                            class="px-2 py-1 rounded text-xs font-bold bg-brand-accent/20 text-brand-accent">WARNING</span>
+                                    </td>
+                                    <td class="py-4 text-right pr-2">
+                                        <button class="text-brand-accent hover:text-white transition"><i
+                                                class="fas fa-file-pdf text-lg"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-800 hover:bg-white/5 transition-colors">
+                                    <td class="py-4 pl-2 font-mono text-gray-300">#RPT-8940</td>
+                                    <td class="py-4 font-medium text-white">Wind Turbine #402</td>
+                                    <td class="py-4 text-gray-400">Oct 22, 11:00 AM</td>
+                                    <td class="py-4 text-gray-300"><i class="fas fa-robot text-brand-accent mr-1"></i>
+                                        Auto-Pilot</td>
+                                    <td class="py-4"><span
+                                            class="px-2 py-1 rounded text-xs font-bold bg-brand-danger/20 text-brand-danger">CRITICAL</span>
+                                    </td>
+                                    <td class="py-4 text-right pr-2">
+                                        <button class="text-brand-accent hover:text-white transition"><i
+                                                class="fas fa-file-pdf text-lg"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="py-4 pl-2 font-mono text-gray-300">#RPT-8939</td>
+                                    <td class="py-4 font-medium text-white">Pipeline Route 66</td>
+                                    <td class="py-4 text-gray-400">Oct 21, 08:45 AM</td>
+                                    <td class="py-4 text-gray-300"><i class="fas fa-robot text-brand-accent mr-1"></i>
+                                        Auto-Pilot</td>
+                                    <td class="py-4"><span
+                                            class="px-2 py-1 rounded text-xs font-bold bg-brand-success/20 text-brand-success">PASSED</span>
+                                    </td>
+                                    <td class="py-4 text-right pr-2">
+                                        <button class="text-brand-accent hover:text-white transition"><i
+                                                class="fas fa-file-pdf text-lg"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Fleet Management -->
+            <div id="tab-fleet" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 items-start">
+                    <!-- Drone Cards -->
+                    <div
+                        class="drone-card glass-card p-5 border-t-4 border-brand-success cursor-pointer transition-all duration-300 relative group">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-white group-hover:text-brand-accent transition-colors">X1-Alpha
+                            </h4>
+                            <span class="text-xs font-bold bg-brand-success/20 text-brand-success px-2 py-1 rounded">IN
+                                FLIGHT</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-300 mb-4">
+                            <div><i class="fas fa-battery-three-quarters text-brand-success mr-1"></i> 78%</div>
+                            <div><i class="fas fa-signal text-brand-success mr-1"></i> 100%</div>
+                        </div>
+                        <div class="text-xs text-gray-400">Mission: Pipeline Survey A</div>
+
+                        <!-- Expandable Content -->
+                        <div
+                            class="expandable-content max-h-0 opacity-0 overflow-hidden transition-all duration-300 mt-0">
+                            <div class="pt-4 mt-4 border-t border-gray-700 text-xs text-gray-400 space-y-2">
+                                <p><span class="text-gray-300 font-medium">Pilot Mode:</span> Autonomous</p>
+                                <p><span class="text-gray-300 font-medium">Altitude:</span> 400 ft AGL</p>
+                                <p><span class="text-gray-300 font-medium">Speed:</span> 12.5 m/s</p>
+                                <p><span class="text-gray-300 font-medium">Est. Return:</span> 14 mins</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="drone-card glass-card p-5 border-t-4 border-brand-gray cursor-pointer transition-all duration-300 relative group">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-white group-hover:text-brand-accent transition-colors">X1-Bravo
+                            </h4>
+                            <span class="text-xs font-bold bg-gray-600/50 text-gray-300 px-2 py-1 rounded">DOCKED</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-300 mb-4">
+                            <div><i class="fas fa-battery-full text-brand-success mr-1"></i> 100%</div>
+                            <div><i class="fas fa-satellite-dish text-gray-500 mr-1"></i> Standby</div>
+                        </div>
+                        <div class="text-xs text-gray-400">Location: Base Station 1</div>
+
+                        <!-- Expandable Content -->
+                        <div
+                            class="expandable-content max-h-0 opacity-0 overflow-hidden transition-all duration-300 mt-0">
+                            <div class="pt-4 mt-4 border-t border-gray-700 text-xs text-gray-400 space-y-2">
+                                <p><span class="text-gray-300 font-medium">Pilot Mode:</span> Standby</p>
+                                <p><span class="text-gray-300 font-medium">Firmware:</span> v2.4.1</p>
+                                <p><span class="text-gray-300 font-medium">Last Flight:</span> 2 hrs ago</p>
+                                <p><span class="text-gray-300 font-medium">Next Sched:</span> 14:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="drone-card glass-card p-5 border-t-4 border-brand-accent cursor-pointer transition-all duration-300 relative group">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-white group-hover:text-brand-accent transition-colors">X1-Charlie
+                            </h4>
+                            <span
+                                class="text-xs font-bold bg-brand-accent/20 text-brand-accent px-2 py-1 rounded">MAINTENANCE</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-300 mb-4">
+                            <div><i class="fas fa-wrench text-brand-accent mr-1"></i> Rotor Check</div>
+                        </div>
+                        <div class="text-xs text-gray-400">Est. Completion: 2h 15m</div>
+
+                        <!-- Expandable Content -->
+                        <div
+                            class="expandable-content max-h-0 opacity-0 overflow-hidden transition-all duration-300 mt-0">
+                            <div class="pt-4 mt-4 border-t border-gray-700 text-xs text-gray-400 space-y-2">
+                                <p><span class="text-gray-300 font-medium">Status:</span> Bay 4</p>
+                                <p><span class="text-gray-300 font-medium">Technician:</span> J. Doe</p>
+                                <p><span class="text-gray-300 font-medium">Issue:</span> Rotor 3 Vibration</p>
+                                <p><span class="text-gray-300 font-medium">Parts:</span> Prop_Set_B</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="drone-card glass-card p-5 border-t-4 border-brand-success cursor-pointer transition-all duration-300 relative group">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-white group-hover:text-brand-accent transition-colors">X1-Delta
+                            </h4>
+                            <span class="text-xs font-bold bg-brand-success/20 text-brand-success px-2 py-1 rounded">IN
+                                FLIGHT</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-gray-300 mb-4">
+                            <div><i class="fas fa-battery-half text-brand-accent mr-1"></i> 42%</div>
+                            <div><i class="fas fa-signal text-brand-success mr-1"></i> 95%</div>
+                        </div>
+                        <div class="text-xs text-gray-400">Mission: Solar Array B</div>
+
+                        <!-- Expandable Content -->
+                        <div
+                            class="expandable-content max-h-0 opacity-0 overflow-hidden transition-all duration-300 mt-0">
+                            <div class="pt-4 mt-4 border-t border-gray-700 text-xs text-gray-400 space-y-2">
+                                <p><span class="text-gray-300 font-medium">Pilot Mode:</span> Manual (Cmdr. Shepard)</p>
+                                <p><span class="text-gray-300 font-medium">Altitude:</span> 150 ft AGL</p>
+                                <p><span class="text-gray-300 font-medium">Speed:</span> 5.2 m/s</p>
+                                <p><span class="text-gray-300 font-medium">Est. Return:</span> 22 mins</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6">
+                    <h4 class="text-lg font-semibold text-white mb-4">Fleet Telemetry Overview</h4>
+                    <div class="h-64 w-full">
+                        <canvas id="fleetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab Switching Logic
+            const tabs = document.querySelectorAll('.sidebar-link');
+            const contents = document.querySelectorAll('.tab-content');
+            const pageTitle = document.getElementById('page-title');
+
+            const tabTitles = {
+                'tab-cloud': 'AeroVision Insight™ Cloud',
+                'tab-inspection': 'Automated Inspection Engine',
+                'tab-digital-twin': 'Digital Twin Workspace',
+                'tab-compliance': 'Automated Compliance Reports',
+                'tab-fleet': 'Fleet Management Dashboard'
+            };
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active from all
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    // Add active to clicked
+                    tab.classList.add('active');
+                    const targetId = tab.getAttribute('data-tab');
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Update Title
+                    pageTitle.innerText = tabTitles[targetId];
+                });
+            });
+
+            // Digital Twin View Controls
+            const btn3d = document.getElementById('btn-3d');
+            const btnThermal = document.getElementById('btn-thermal');
+            const btnWireframe = document.getElementById('btn-wireframe');
+            const dtVideo = document.getElementById('dt-video');
+            const allBtns = [btn3d, btnThermal, btnWireframe];
+
+            const resetBtns = () => {
+                allBtns.forEach(btn => {
+                    btn.className = 'px-3 py-1 bg-brand-gray text-white hover:bg-gray-600 text-xs font-bold rounded transition';
+                });
+                dtVideo.classList.remove('video-thermal', 'video-wireframe');
+            };
+
+            const setActiveBtn = (btn) => {
+                btn.className = 'px-3 py-1 bg-brand-accent text-brand-dark text-xs font-bold rounded transition';
+            };
+
+            btn3d.addEventListener('click', () => {
+                resetBtns();
+                setActiveBtn(btn3d);
+                if (!dtVideo.src.endsWith('images/3dview-video.mp4')) {
+                    dtVideo.src = 'images/3dview-video.mp4';
+                }
+            });
+
+            btnThermal.addEventListener('click', () => {
+                resetBtns();
+                setActiveBtn(btnThermal);
+                if (!dtVideo.src.endsWith('images/Thermal-video.mp4')) {
+                    dtVideo.src = 'images/Thermal-video.mp4';
+                }
+            });
+
+            btnWireframe.addEventListener('click', () => {
+                resetBtns();
+                setActiveBtn(btnWireframe);
+                if (!dtVideo.src.endsWith('images/wire-frame-video.mp4')) {
+                    dtVideo.src = 'images/wire-frame-video.mp4';
+                }
+            });
+
+            // Mock Charts using Chart.js
+            // Cloud Uplink Chart
+            const ctxCloud = document.getElementById('cloudChart').getContext('2d');
+            new Chart(ctxCloud, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [{
+                        label: 'Uplink (TB)',
+                        data: [1.2, 1.9, 3.5, 5.0, 4.2, 2.8, 1.5],
+                        borderColor: '#F59E0B',
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94A3B8' } }
+                    }
+                }
+            });
+
+            // Fleet Chart
+            const ctxFleet = document.getElementById('fleetChart').getContext('2d');
+            new Chart(ctxFleet, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Flight Hours',
+                            data: [12, 19, 15, 25, 22, 30, 28],
+                            backgroundColor: '#10B981',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Maintenance Hours',
+                            data: [2, 1, 3, 0, 1, 4, 2],
+                            backgroundColor: '#EF4444',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+                        x: { stacked: true, grid: { display: false }, ticks: { color: '#94A3B8' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#E2E8F0' } }
+                    }
+                }
+            });
+
+            // Drone Card Expansion Logic
+            const droneCards = document.querySelectorAll('.drone-card');
+
+            const collapseAllCards = () => {
+                droneCards.forEach(card => {
+                    const content = card.querySelector('.expandable-content');
+                    if (content && !content.classList.contains('max-h-0')) {
+                        content.classList.add('max-h-0', 'opacity-0', 'mt-0');
+                        content.classList.remove('max-h-40', 'opacity-100', 'mt-4');
+                        card.classList.remove('shadow-[0_0_15px_rgba(245,158,11,0.2)]', 'scale-[1.02]', 'z-10');
+                    }
+                });
+            };
+
+            droneCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const content = card.querySelector('.expandable-content');
+                    if (content) {
+                        const isCollapsed = content.classList.contains('max-h-0');
+
+                        // Collapse all cards first
+                        collapseAllCards();
+
+                        if (isCollapsed) {
+                            // Expand the clicked one
+                            content.classList.remove('max-h-0', 'opacity-0', 'mt-0');
+                            content.classList.add('max-h-40', 'opacity-100', 'mt-4');
+                            card.classList.add('shadow-[0_0_15px_rgba(245,158,11,0.2)]', 'scale-[1.02]', 'z-10');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
